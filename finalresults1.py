@@ -12,7 +12,7 @@ cur = conn.cursor()
 userIn = raw_input("Search word: ")
 #print(userIn)
 
-if userIn != '\n':
+if userIn == '':
   cur.execute("SELECT word, count from tweetwordcount order by word asc")
   records = cur.fetchall()
   for rec in records:
@@ -20,7 +20,7 @@ if userIn != '\n':
    print "count = ", rec[1], "\n"
    conn.commit()
 else:
-  cur.execute("SELECT word, count from tweetwordcount  where word = %s order by word asc",(userIn))
+  cur.execute("SELECT word, count from tweetwordcount  where word = %s",(userIn))
   records = cur.fetchall()
   for rec in records:
    print "word = ", rec[0]

@@ -57,7 +57,7 @@ class WordCounter(Bolt):
         self.counts[word] += 1
         self.emit([word, self.counts[word]])
        	uCount = self.counts[word]
-       	uWord = word
+       	uWord = word.lower()
 
 
 	if uCount != 1:
