@@ -29,18 +29,18 @@ conn = psycopg2.connect(database="tcount", user="postgres", password="pass", hos
 #Create a Table
 #The first step is to create a cursor.
 
-#cur = conn.cursor()
-#cur.execute('''DROP TABLE IF EXISTS tweetwordcount''')
-#conn.commit()
+cur = conn.cursor()
+cur.execute('''DROP TABLE IF EXISTS tweetwordcount;''')
+conn.commit()
 
-try:
-	cur = conn.cursor()
-	cur.execute('''CREATE TABLE tweetwordcount
-       		(word TEXT PRIMARY KEY     NOT NULL,
-       		count INT     NOT NULL);''')
-	conn.commit()
-except:
-	pass
+#try:
+cur = conn.cursor()
+cur.execute('''CREATE TABLE tweetwordcount
+	(word TEXT PRIMARY KEY     NOT NULL,
+	count INT     NOT NULL);''')
+conn.commit()
+#except:
+#	pass
 
 cur = conn.cursor()
 
@@ -56,14 +56,15 @@ class WordCounter(Bolt):
         # Increment the local count
         self.counts[word] += 1
         self.emit([word, self.counts[word]])
+       	uCount = self.counts[word]
+       	uWord = word
 
-        try:
-        	uCount = self.counts[word]
-        	uWord = word
-        	cur.execute("UPDATE tweetwordcount SET count=%s WHERE word=%s", (uCount, uWord))
-        	conn.commit()
-        except:
-#           cur = conn.cursor()
+
+	if uCount != 1:
+
+		cur.execute("UPDATE tweetwordcount SET count=%s WHERE word=%s", (uCount, uWord))
+		conn.commit()
+        else:
 		cur.execute("INSERT INTO tweetwordcount (word,count) \
         	VALUES (%s, %s)", (uWord, uCount))
         	conn.commit()        
