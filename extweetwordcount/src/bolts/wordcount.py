@@ -51,13 +51,13 @@ class WordCounter(Bolt):
 
 
     def process(self, tup):
-        word = tup.values[0]
+        word = tup.values[0].lower()
 
         # Increment the local count
         self.counts[word] += 1
         self.emit([word, self.counts[word]])
        	uCount = self.counts[word]
-       	uWord = word.lower()
+       	uWord = word
 
 
 	if uCount != 1:
@@ -70,15 +70,15 @@ class WordCounter(Bolt):
         	conn.commit()        
 
         # Log the count - just to see the topology running
-#self.log('%s: %d' % (word, self.counts[word]))
+#	self.log('%s: %d' % (word, self.counts[word]))
 
 #Select
-cur.execute("SELECT word, count from tweetwordcount")
-records = cur.fetchall()
-for rec in records:
-   print ("word = ", rec[0])
-   print ("count = ", rec[1], "\n")
-conn.commit()
+	cur.execute("SELECT word, count from tweetwordcount")
+	records = cur.fetchall()
+	for rec in records:
+   	 print ("word = ", rec[0])
+   	 print ("count = ", rec[1], "\n")
+	conn.commit()
 
 #conn.close()
 
